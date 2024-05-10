@@ -112,3 +112,13 @@ TODO: Install flyctl
 In the app:
 
 `fly launch`
+
+- create the fly.toml
+- create the dockerfile
+
+`fly volume create <name>`
+
+add [mounts] to fly.toml
+
+`fly secrets set DATABASE_URL=sqlite3:///mnt/name/production.sqlite`
+

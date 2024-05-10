@@ -23,7 +23,8 @@ APP_NAME = os.getenv("FLY_APP_NAME", "django_restaurant")
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh'
+# SECRET_KEY = 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh'
+SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -82,7 +83,8 @@ WSGI_APPLICATION = 'django_restaurant.wsgi.app'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': f'/mnt/{APP_NAME}/production.sqlite',
     }
 }
 
