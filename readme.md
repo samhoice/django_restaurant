@@ -54,7 +54,7 @@ and save it.
 
 Then it exists in the db. You can retrieve it with:
 
-`d.objects.all()`
+`Dish.objects.get(id=d.id)`
 
 Objects is a model manager, and it lets you do interesting things with Django models. You can create in one step like SQL INSERT:
 
