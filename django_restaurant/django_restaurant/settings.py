@@ -16,6 +16,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+APP_NAME = os.getenv("FLY_APP_NAME", "django_restaurant")
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -25,7 +28,7 @@ SECRET_KEY = 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev"]
 
 
 # Application definition

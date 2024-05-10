@@ -103,3 +103,12 @@ Authentication is already set up. If you add this line:
 `permission_classes = [permissions.IsAuthenticated]`
 
 into your serializer class it will require authentication to load your data (serializer). There is no login endpoint yet, but you can always log in through the admin. Note that `IsAuthenticated` only means you logged in as a valid user. Authorization and permissions are a separate thing.
+
+
+## Deploy on fly
+
+TODO: Install flyctl
+
+In the app:
+
+`fly launch`
