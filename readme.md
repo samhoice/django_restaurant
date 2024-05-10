@@ -56,7 +56,7 @@ Then it exists in the db. You can retrieve it with:
 
 `Dish.objects.get(id=d.id)`
 
-Objects is a model manager, and it lets you do interesting things with Django models. You can create in one step like SQL INSERT:
+Objects is a model manager, and it lets you do interesting things with Django models. You can create and save in one step like SQL INSERT:
 
 `Dish.objects.create(title="Sandwich", cuisine_type="All", category="LU", description="It's a sandwich", price=14.99, spicy_level=1)`
 

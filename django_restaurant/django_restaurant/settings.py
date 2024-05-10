@@ -70,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_restaurant.wsgi.application'
+WSGI_APPLICATION = 'django_restaurant.wsgi.app'
 
 
 # Database
