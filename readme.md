@@ -174,3 +174,12 @@ STORAGES = {
 ```
 
 Don't forget to run `./manage.py collectstatic` before deploy.
+
+
+## The Admin
+
+One line of code (two because you have to import the model) makes the `Dish` model availale in the admin.
+
+`admin.site.register(Dish)`
+
+See `restaurant/admin.py` for the whole thing.
