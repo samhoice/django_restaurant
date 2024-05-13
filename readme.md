@@ -91,6 +91,9 @@ for an example of importing your data. For a standalone python script see:
 
 `./standalone_script.py`
 
+Standalone scripts can be handy for doing stuff. Usually you'd use management commands if you have something you needed to run periodically. For instance, from CI you could run some kind of management command to update data on deploy (version number for example). migrations, which you have to apply when you deploy some kind of DB change, are builtin management commands.
+
+
 ## An API endpoint
 
 As an example I created an API endpoint using Django JsonResponse. It's in views dishview, and is wired into the urls.py
