@@ -182,4 +182,4 @@ One line of code (two because you have to import the model) makes the `Dish` mod
 
 `admin.site.register(Dish)`
 
-See `restaurant/admin.py` for the whole thing.
+See `restaurant/admin.py` for the whole thing. You need to run `./manage.py createsuperuser` to log into the admin for the first time.
