@@ -11,6 +11,12 @@ MEAL_CATEGORIES = {
 
 
 class Dish(models.Model):
+    """A dish from a restaurant
+
+    Note that we haven't defined "id" here. ID will automatically be added if
+    you don't define one of your fields as a primary key. If you use the auto
+    primary key, pk and id are synonyms.
+    """
 
     title = models.CharField(max_length=256)
     cuisine_type = models.CharField(max_length=256)

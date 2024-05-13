@@ -76,6 +76,21 @@ Now `d` is an instance of class Dish, and can be used like any object. Get the t
 
 `d.title`
 
+
+## Running ORM commands from a script
+
+You can use the Object Relational Mapper (ORM) from a management command or a standalone script. For management commands see:
+
+`./management/commmands/custom_command.py`
+
+for the simplest possible command and
+
+`./management/commmands/orm_playground.py`
+
+for an example of importing your data. For a standalone python script see:
+
+`./standalone_script.py`
+
 ## An API endpoint
 
 As an example I created an API endpoint using Django JsonResponse. It's in views dishview, and is wired into the urls.py
