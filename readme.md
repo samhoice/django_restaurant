@@ -123,28 +123,28 @@ Authentication is already set up. If you add this line:
 into your serializer class it will require authentication to load your data (serializer). There is no login endpoint yet, but you can always log in through the admin. Note that `IsAuthenticated` only means you logged in as a valid user. Authorization and permissions are a separate thing.
 
 
-## Deploy on fly
-
-TODO: Install flyctl
-
-In the app:
-
-`fly launch`
-
-- create the fly.toml
-- create the dockerfile
-
-`fly volume create <name>`
-
-add [mounts] to fly.toml
-
-`fly secrets set DATABASE_URL=sqlite3:///mnt/name/production.sqlite`
-
 ## CSRF
 
 Cross Site Request Forgery (CSRF) - add this to settings.py
 
 This allows requests from both fly and local.
+
+
+## CORS
+
+Cross origin request sharing
+
+- Install the django package 
+    - django-cors-headers
+
+- update settings
+    - add `corsheaders` to `INSTALLED_APPS`
+    - add the middleware in `MIDDLEWARE`
+        - Needs to go as high as possible in the list
+        - `'corsheaders.middleware.CorsMiddleware',`
+    - add `CORS_ALLOWED_ORIGIN = ["http://localhost:8080",]` 
+
+
 
 ```python
 CSRF_TRUSTED_ORIGINS = [f'https://{APP_NAME}.fly.dev', 'http://localhost:8000']
@@ -183,3 +183,22 @@ One line of code (two because you have to import the model) makes the `Dish` mod
 `admin.site.register(Dish)`
 
 See `restaurant/admin.py` for the whole thing. You need to run `./manage.py createsuperuser` to log into the admin for the first time.
+
+
+## Deploy on fly
+
+TODO: Install flyctl
+
+In the app:
+
+`fly launch`
+
+- create the fly.toml
+- create the dockerfile
+
+`fly volume create <name>`
+
+add [mounts] to fly.toml
+
+`fly secrets set DATABASE_URL=sqlite3:///mnt/name/production.sqlite`
+
