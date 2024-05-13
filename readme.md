@@ -122,3 +122,37 @@ add [mounts] to fly.toml
 
 `fly secrets set DATABASE_URL=sqlite3:///mnt/name/production.sqlite`
 
+## CSRF
+
+Cross Site Request Forgery (CSRF) - add this to settings.py
+
+This allows requests from both fly and local.
+
+```python
+CSRF_TRUSTED_ORIGINS = [f'https://{APP_NAME}.fly.dev', 'http://localhost:8000']
+```
+
+## Whitenoise
+
+`pip install whitenoise`
+
+set STATIC_ROOT in settings
+
+- `STATIC_ROOT = BASE_DIR / "staticfiles"`
+
+Add WhiteNoise middleware to settings MIDDLEWARE immediately after SecurityMiddleware
+
+    `"whitenoise.middleware.WhiteNoiseMiddleware",`
+
+Add STORAGES block to settings.py to enable compression
+
+```python
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+```
+
+Don't forget to run `./manage.py collectstatic` before deploy.

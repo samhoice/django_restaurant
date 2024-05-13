@@ -16,7 +16,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-APP_NAME = os.getenv("FLY_APP_NAME", "django_restaurant")
+APP_NAME = os.getenv("FLY_APP_NAME", None)
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,9 +27,10 @@ APP_NAME = os.getenv("FLY_APP_NAME", "django_restaurant")
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev", "127.0.0.1"]
+ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_restaurant.wsgi.app'
+WSGI_APPLICATION = 'django_restaurant.wsgi.application'
 
 
 # Database
@@ -84,7 +86,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
-        'NAME': f'/mnt/{APP_NAME}/production.sqlite',
+        # 'NAME': '/mnt/django_restaurant/production.sqlite',
+        'NAME': '/mnt/django_restaurant/production.sqlite' if APP_NAME else BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -125,7 +128,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = [f'https://{APP_NAME}.fly.dev', 'http://localhost:8000']
