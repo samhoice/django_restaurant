@@ -187,18 +187,62 @@ See `restaurant/admin.py` for the whole thing. You need to run `./manage.py crea
 
 ## Deploy on fly
 
-TODO: Install flyctl
+**Install flyctl**
 
-In the app:
+[Install Docs](https://fly.io/docs/hands-on/install-flyctl/)
+
+`brew install fly`
+
+**Set up an account**
+
+Just go signup. Credit card required.
+
+
+**Setting up an app**
+
+In the app, at the top level:
 
 `fly launch`
 
+This will create defaults for everything. You can customize these from here.
+
 - create the fly.toml
+    - contains app deploy configuration
 - create the dockerfile
 
-`fly volume create <name>`
 
-add [mounts] to fly.toml
+Our database is SQLite. It's just a file on disk. The fly machines don't preserve their disks between boots, so to preserve our database we need a volume. The volume can only attach to a single fly machine, so if you have multiple apps, each one will probably need a separate volume.
 
-`fly secrets set DATABASE_URL=sqlite3:///mnt/name/production.sqlite`
+`fly volume create <volume_name>`
+
+Now we need to link the volume to the app. The app is running on a fly machine, we need to mount that volume as a directory on the fly machine. Add the `[mounts]` section to fly.toml
+
+```
+[[mounts]]
+  source = 'volume_name'
+  destination = '/mnt/dir_name'
+```
+
+Now lets set the database to point to the file on disk. Most deployment systems from fly to github to kubernetes have a concept of 'secrets'. This is basically a value you can save securely and set into an environment variable. Let's save an environment variable called `DATABASE_URL` and 
+
+`fly secrets set DATABASE_URL=sqlite3:///mnt/dir_name/production.sqlite`
+
+And the last step is to update the settings to handle the database URL from the secret. First, we need to add some variables set by fly to `<project_name>/settings.py`. `APP_NAME` is set by fly automatically, so we'll use that to see that we're running there. Then `DATABASE_URL` is our secret. We'll get those from environment variables.
+
+```
+APP_NAME = os.getenv("FLY_APP_NAME", None)
+DATABASE_URL = os.getenv("DATABASE_URL", None)
+```
+
+Now in the database section we can set the database name to the DB url in our secret:
+
+`'NAME': DATABASE_URL if APP_NAME else BASE_DIR / 'db.sqlite3',`
+
+The simpler alternative is skip the secret and just put the url into the database name directly. Note that you should have a secret for `SECRET_KEY` in your settings file the same way. The default django configuration will already read it from the environment, so you only have to set `SECRET_KEY` in fly secrets.
+
+Wait, it didn't work?!
+
+On the off chance that the app doesn't start up for some reason, you can get your logs from:
+
+`fly logs`
 

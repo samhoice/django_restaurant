@@ -1,3 +1,4 @@
+from random import sample 
 from django.db import models
 
 # Create your models here.
@@ -8,6 +9,15 @@ MEAL_CATEGORIES = {
         "BH": "Brunch",
         "AP": "Appetizer",
         }
+
+
+class RandomDishManager(models.Manager):
+    def get_queryset(self):
+        base_queryset = super().get_queryset()
+        pks = list(base_queryset.values_list('pk', flat=True))
+        sample_size = 5 if len(pks) > 5 else len(pks)
+        random_pks = sample(pks, k=sample_size)
+        return base_queryset.filter(id__in=random_pks)
 
 
 class Dish(models.Model):
@@ -24,6 +34,12 @@ class Dish(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     spicy_level = models.PositiveSmallIntegerField()
+
+    # first save the default manager
+    objects = models.Manager()
+
+    # now add a new manager that overrides get_queryset
+    random_objects = RandomDishManager()
 
 
 class Restaurant(models.Model):

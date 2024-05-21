@@ -17,6 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 APP_NAME = os.getenv("FLY_APP_NAME", None)
+DATABASE_URL = os.getenv("DATABASE_URL", None)
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    # 'django_extensions',
+    'django_extensions',
     'restaurant',
 ]
 
@@ -87,9 +88,7 @@ WSGI_APPLICATION = 'django_restaurant.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        # 'NAME': '/mnt/django_restaurant/production.sqlite',
-        'NAME': '/mnt/django_restaurant/production.sqlite' if APP_NAME else BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_URL if APP_NAME else BASE_DIR / 'db.sqlite3',
     }
 }
 

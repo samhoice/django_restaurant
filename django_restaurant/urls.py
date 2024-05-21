@@ -19,10 +19,11 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from restaurant.views import DishViewSet, dishview
+from restaurant.views import DishViewSet, RandomDishViewSet, dishview
 
 router = routers.DefaultRouter()
-router.register(r'dishes', DishViewSet)
+router.register(r'dishes', DishViewSet, basename='dishes')
+router.register(r'random_dishes', RandomDishViewSet, basename='random')
 
 urlpatterns = [
     path('', include(router.urls)),

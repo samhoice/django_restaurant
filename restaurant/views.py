@@ -38,3 +38,10 @@ class DishViewSet(viewsets.ModelViewSet):
     queryset = Dish.objects.all()
     serializer_class = DishSerializer
     # permission_classes = [permissions.IsAuthenticated]
+
+
+class RandomDishViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset for random dishes
+    """
+    queryset = Dish.random_objects.all()
+    serializer_class = DishSerializer
