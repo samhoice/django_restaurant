@@ -1,5 +1,9 @@
 # Django Restaurant API
 
+## What is this?
+
+This is a test django DRF API project setup to run on fly.io. Staticfiles are handled through whitenoise.
+
 ## Creation Steps
 
 - create a virtual env

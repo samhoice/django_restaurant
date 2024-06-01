@@ -14,21 +14,38 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
-from restaurant.views import DishViewSet, RandomDishViewSet, dishview
+from restaurant.views import DishViewSet, RandomDishViewSet, dishview, FileUploadAPIView, getFile
 
 router = routers.DefaultRouter()
 router.register(r'dishes', DishViewSet, basename='dishes')
 router.register(r'random_dishes', RandomDishViewSet, basename='random')
 
-urlpatterns = [
+api_patterns = [
     path('', include(router.urls)),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('dishview/', dishview),
 
+    path('upload/', FileUploadAPIView.as_view(), name='upload-file'),
+    path('download/', getFile, name='upload-file'),
+]
+
+urlpatterns = [
+    path('api/', include(api_patterns)),
     path('admin/', admin.site.urls),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

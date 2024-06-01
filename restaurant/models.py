@@ -1,5 +1,10 @@
 from random import sample 
 from django.db import models
+from django.conf import settings
+
+from logging import getLogger
+
+logger = getLogger(settings.LOGGER_NAME)
 
 # Create your models here.
 MEAL_CATEGORIES = {
@@ -13,7 +18,10 @@ MEAL_CATEGORIES = {
 
 class RandomDishManager(models.Manager):
     def get_queryset(self):
-        base_queryset = super().get_queryset()
+        """There's a bug here in that model managers get cached.
+        """
+        logger.info("Random Dish Manager")
+        base_queryset = super().get_queryset().all()
         pks = list(base_queryset.values_list('pk', flat=True))
         sample_size = 5 if len(pks) > 5 else len(pks)
         random_pks = sample(pks, k=sample_size)
@@ -50,3 +58,9 @@ class Menu(models.Model):
     title = models.CharField(max_length=256)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     dishes = models.ManyToManyField(Dish)
+
+class UploadedFile(models.Model):
+    file = models.FileField()
+    uploaded = models.DateTimeField(auto_now_add=True)
+
+

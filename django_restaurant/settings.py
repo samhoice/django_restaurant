@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 APP_NAME = os.getenv("FLY_APP_NAME", None)
 DATABASE_URL = os.getenv("DATABASE_URL", None)
-
+VOLUME_PATH = Path("/mnt/") / "django_restaurant"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -28,8 +28,7 @@ DATABASE_URL = os.getenv("DATABASE_URL", None)
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-n+=6%=4spedba(c3ca+rs2&9&9pvt9-0-%@+g8r3oq8usfc)mh')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = False if APP_NAME else True
 
 ALLOWED_HOSTS = [f"{APP_NAME}.fly.dev", "localhost", "127.0.0.1"]
 
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'django_extensions',
     'restaurant',
@@ -81,6 +81,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_restaurant.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+} 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -129,9 +136,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = (VOLUME_PATH if APP_NAME else BASE_DIR) / "staticfiles"
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 524288
 STORAGES = {
+    'default': {
+        'BACKEND': "django.core.files.storage.FileSystemStorage",
+    },
     'staticfiles': {
         'BACKEND': "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
@@ -145,3 +156,51 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [f'https://{APP_NAME}.fly.dev', 'http://localhost:8000']
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:8080",]
+
+MEDIA_URL = '/media/'
+# MEDIA_ROOT = (VOLUME_PATH if APP_NAME else BASE_DIR) / "media"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "root": {
+#         "handlers": ["console"],
+#         "level": "INFO",
+#     },
+# }
+
+LOGGER_NAME = "dj_restaurant"
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    "formatters": {
+        "simple": {
+            "format": '%(asctime)s - %(levelname)s - %(message)s'
+            },
+        },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true'],
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        LOGGER_NAME: {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+    },
+}

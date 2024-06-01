@@ -4,3 +4,4 @@ gunicorn
 whitenoise
 django-cors-headers
 django-extensions
+djangorestframework-simplejwt[crypto]
